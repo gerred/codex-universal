@@ -34,22 +34,19 @@
           nix
         ];
 
-        entry = pkgs.runCommand "entrypoint" { } ''
+        codexScripts = pkgs.runCommand "codex-scripts" {} ''
+          mkdir -p $out/opt/codex
+          cp ${./setup_universal.sh} $out/opt/codex/setup_universal.sh
+          chmod +x $out/opt/codex/setup_universal.sh
           mkdir -p $out/opt/codex
           cp ${./entrypoint.sh} $out/opt/codex/entrypoint.sh
           chmod +x $out/opt/codex/entrypoint.sh
         '';
 
-        setupScript = pkgs.runCommand "setup_universal" { } ''
-          mkdir -p $out/opt/codex
-          cp ${./setup_universal.sh} $out/opt/codex/setup_universal.sh
-          chmod +x $out/opt/codex/setup_universal.sh
-        '';
-
       in {
         packages.dockerImage = pkgs.dockerTools.buildLayeredImage {
           name = "codex-universal";
-          contents = envPackages ++ [ entry setupScript ];
+          contents = envPackages ++ [ codexScripts ];
           config = {
             Entrypoint = [ "/opt/codex/entrypoint.sh" ];
             Env = [ "NIX_CONFIG=experimental-features\ =\ nix-command\ flakes" ];
