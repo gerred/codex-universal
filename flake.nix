@@ -58,6 +58,9 @@
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [ nix docker-compose ];
+          shellHook = ''
+            export NIX_CONFIG="experimental-features = nix-command flakes"
+          '';
         };
       });
 }
