@@ -53,3 +53,8 @@ In addition to the packages specified in the table above, the following packages
 - `bazelisk` / `bazel`
 
 See [Dockerfile](Dockerfile) for the full details of installed packages.
+
+## Development
+
+A [Nix](https://nixos.org/) flake is provided to simplify setting up a local development shell. Run `nix develop` to enter a shell with `nix` available.
+
