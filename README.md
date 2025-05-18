@@ -56,7 +56,11 @@ See [Dockerfile](Dockerfile) for the full details of installed packages.
 
 ## Building with Nix
 
-You can build an equivalent image using [Nix](https://nixos.org/). While the Dockerfile remains the primary way to build the container image, the repository also ships a Flake that offers a reproducible development environment. Ensure `nix` is installed with flakes enabled. To build the image:
+You can build an equivalent image using [Nix](https://nixos.org/). While the Dockerfile remains the primary way to build the container image, the repository also ships a Flake that offers a reproducible development environment. Ensure `nix` is installed with flakes enabled.
+
+The Flake lockfile `flake.lock` should be kept current. Run `nix flake lock` when dependencies change to update it.
+
+To build the image:
 
 ```bash
 nix build .#dockerImage
@@ -74,7 +78,12 @@ A development shell with the required tools can be entered with:
 nix develop
 ```
 
-This shell enables the `nix-command` and `flakes` features by default.
+The shell sets `NIX_CONFIG="experimental-features = nix-command flakes"`,
+so the `nix-command` and `flakes` features are enabled by default.
+
+The repository's Nix flake produces a `flake.lock` file to pin dependencies.
+Make sure this file stays up to date. A workflow (`update-flake-lock.yml`)
+is provided to automatically regenerate and commit `flake.lock`.
 
 ### direnv integration
 
