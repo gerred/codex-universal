@@ -76,3 +76,7 @@ nix develop
 
 This shell enables the `nix-command` and `flakes` features by default.
 
+The repository's Nix flake produces a `flake.lock` file to pin dependencies.
+Make sure this file stays up to date. A workflow (`update-flake-lock.yml`)
+is provided to automatically regenerate and commit `flake.lock`.
+
