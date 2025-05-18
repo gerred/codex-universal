@@ -2,7 +2,7 @@
 
 `codex-universal` is a reference implementation of the base Docker image available in [OpenAI Codex](http://platform.openai.com/docs/codex).
 
-This repository is intended to help developers cutomize environments in Codex, by providing a similar image that can be pulled and run locally. This is not an identical environment but should help for debugging and development.
+This repository is intended to help developers customize environments in Codex, by providing a similar image that can be pulled and run locally. This is not an identical environment but should help for debugging and development.
 
 For more details on environment setup, see [OpenAI Codex](http://platform.openai.com/docs/codex).
 
@@ -47,16 +47,25 @@ The following environment variables can be set to configure runtime installation
 
 In addition to the packages specified in the table above, the following packages are also installed:
 
+- `pyenv`
+- `pipx`
+- `nvm` (installed via the flake from the official git repo)
 - `ruby`: 3.2.3
 - `bun`: 1.2.10
 - `java`: 21
 - `bazelisk` / `bazel`
 
+The flake fetches `nvm` from the official Git repository, ensuring the expected version is available in the image.
+
 See [Dockerfile](Dockerfile) for the full details of installed packages.
 
 ## Building with Nix
 
-You can build an equivalent image using [Nix](https://nixos.org/). The repository provides a Flake that produces a Docker image and a development shell. Ensure `nix` is installed with flakes enabled. To build the image:
+You can build an equivalent image using [Nix](https://nixos.org/). While the Dockerfile remains the primary way to build the container image, the repository also ships a Flake that offers a reproducible development environment. Ensure `nix` is installed with flakes enabled.
+
+The Flake lockfile `flake.lock` should be kept current. Run `nix flake lock` when dependencies change to update it.
+
+To build the image:
 
 ```bash
 nix build .#dockerImage
@@ -74,8 +83,26 @@ A development shell with the required tools can be entered with:
 nix develop
 ```
 
-directory.
-
 The shell sets `NIX_CONFIG="experimental-features = nix-command flakes"`, so the `nix-command` and `flakes` features are enabled by default.
 
-If you have [direnv](https://direnv.net/) installed, enable it in this repository to automatically load the development shell when you `cd` into the directory.
+The repository's Nix flake produces a `flake.lock` file to pin dependencies.
+Make sure this file stays up to date. A workflow (`update-flake-lock.yml`)
+is provided to automatically regenerate and commit `flake.lock`.
+
+### direnv integration
+
+The repository includes a `.envrc` file for [direnv](https://direnv.net/). After installing `direnv`, run `direnv allow` in the repository root. Each new shell will automatically enter the `nix develop` environment.
+
+### Customizing flake inputs
+
+`nix develop` and `nix build` support `--override-input` to use alternative flake sources. For example, to try a different `nixpkgs` revision:
+
+```bash
+nix develop --override-input nixpkgs github:NixOS/nixpkgs/nixos-unstable
+```
+
+Nix-related environment variables can also be set as needed, such as:
+
+```bash
+NIX_PATH=nixpkgs=./nixpkgs nix build
+```

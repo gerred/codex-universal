@@ -11,6 +11,8 @@
       let
         pkgs = import nixpkgs { inherit system; };
 
+        nvm = pkgs.callPackage ./nvm.nix {};
+
         envPackages = with pkgs; [
           bashInteractive
           git
@@ -22,7 +24,10 @@
           rsync
           unzip
           zip
+          pyenv
+          pipx
           python311Full
+          nvm
           nodejs_22
           bun
           jdk21
@@ -34,15 +39,21 @@
           nix
         ];
 
-        entry = pkgs.writeShellScriptBin "entrypoint.sh" (builtins.readFile ./entrypoint.sh);
-        setupScript = pkgs.writeShellScriptBin "setup_universal.sh" (builtins.readFile ./setup_universal.sh);
+        codexScripts = pkgs.runCommand "codex-scripts" {} ''
+          mkdir -p $out/opt/codex
+          cp ${./setup_universal.sh} $out/opt/codex/setup_universal.sh
+          chmod +x $out/opt/codex/setup_universal.sh
+          mkdir -p $out/opt/codex
+          cp ${./entrypoint.sh} $out/opt/codex/entrypoint.sh
+          chmod +x $out/opt/codex/entrypoint.sh
+        '';
 
       in {
         packages.dockerImage = pkgs.dockerTools.buildLayeredImage {
           name = "codex-universal";
-          contents = envPackages ++ [ entry setupScript ];
+          contents = envPackages ++ [ codexScripts ];
           config = {
-            Entrypoint = [ "${entry}/bin/entrypoint.sh" ];
+            Entrypoint = [ "/opt/codex/entrypoint.sh" ];
             Env = [ "NIX_CONFIG=experimental-features\ =\ nix-command\ flakes" ];
           };
         };
@@ -54,4 +65,4 @@
           '';
         };
       });
-}
+  }
