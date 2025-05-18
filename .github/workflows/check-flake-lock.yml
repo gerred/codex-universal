@@ -1,0 +1,32 @@
+name: Check flake.lock
+
+# Run on every pull request against main branch
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  flake-lock-check:
+    name: Ensure flake.lock is up to date
+    runs-on: ubuntu-latest
+    container:
+      image: nixos/nix:latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore and save Nix store cache
+        uses: nix-community/cache-nix-action@v6
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', 'flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+
+      - name: Check flake.lock is unchanged
+        run: |
+          nix flake lock --check
+
+      - name: Fail if flake.lock drift detected
+        run: |
+          git diff --exit-code flake.lock

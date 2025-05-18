@@ -1,9 +1,8 @@
 name: Update flake.lock
 
 on:
+  # We no longer run on a schedule; Dependabot will bump the lockfile.
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * 0'
 
 permissions:
   contents: write
