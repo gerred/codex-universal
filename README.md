@@ -47,6 +47,9 @@ The following environment variables can be set to configure runtime installation
 
 In addition to the packages specified in the table above, the following packages are also installed:
 
+- `pyenv`
+- `pipx`
+- `nvm`
 - `ruby`: 3.2.3
 - `bun`: 1.2.10
 - `java`: 21

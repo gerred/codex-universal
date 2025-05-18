@@ -22,7 +22,10 @@
           rsync
           unzip
           zip
+          pyenv
+          pipx
           python311Full
+          nvm
           nodejs_22
           bun
           jdk21
