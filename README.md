@@ -75,4 +75,5 @@ nix develop
 ```
 
 This shell enables the `nix-command` and `flakes` features by default.
+It sets the `NIX_CONFIG` environment variable to `experimental-features = nix-command flakes`.
 
