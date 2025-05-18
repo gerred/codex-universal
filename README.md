@@ -49,11 +49,13 @@ In addition to the packages specified in the table above, the following packages
 
 - `pyenv`
 - `pipx`
-- `nvm`
+- `nvm` (installed via the flake from the official git repo)
 - `ruby`: 3.2.3
 - `bun`: 1.2.10
 - `java`: 21
 - `bazelisk` / `bazel`
+
+The flake fetches `nvm` from the official Git repository, ensuring the expected version is available in the image.
 
 See [Dockerfile](Dockerfile) for the full details of installed packages.
 
