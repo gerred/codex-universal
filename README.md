@@ -76,3 +76,7 @@ nix develop
 
 This shell enables the `nix-command` and `flakes` features by default.
 
+### Automatic shell activation with direnv
+
+If you use [direnv](https://direnv.net/) the development shell can be loaded automatically. Run `direnv allow` once in this directory to trust the `.envrc` file.
+
