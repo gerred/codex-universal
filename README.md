@@ -74,6 +74,5 @@ A development shell with the required tools can be entered with:
 nix develop
 ```
 
-This shell enables the `nix-command` and `flakes` features by default.
-It sets the `NIX_CONFIG` environment variable to `experimental-features = nix-command flakes`.
+The shell sets `NIX_CONFIG="experimental-features = nix-command flakes"`, so the `nix-command` and `flakes` features are enabled by default.
 
