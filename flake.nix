@@ -11,6 +11,8 @@
       let
         pkgs = import nixpkgs { inherit system; };
 
+        nvm = pkgs.callPackage ./nvm.nix {};
+
         envPackages = with pkgs; [
           bashInteractive
           git
