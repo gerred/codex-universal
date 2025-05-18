@@ -75,4 +75,7 @@ nix develop
 ```
 
 This shell enables the `nix-command` and `flakes` features by default.
+If you have [direnv](https://direnv.net/) installed, enable it in this
+repository to automatically load the development shell when you `cd` into the
+directory.
 
