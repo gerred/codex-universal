@@ -74,8 +74,8 @@ A development shell with the required tools can be entered with:
 nix develop
 ```
 
-This shell enables the `nix-command` and `flakes` features by default.
-If you have [direnv](https://direnv.net/) installed, enable it in this
-repository to automatically load the development shell when you `cd` into the
 directory.
 
+The shell sets `NIX_CONFIG="experimental-features = nix-command flakes"`, so the `nix-command` and `flakes` features are enabled by default.
+
+If you have [direnv](https://direnv.net/) installed, enable it in this repository to automatically load the development shell when you `cd` into the directory.
