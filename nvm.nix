@@ -1,4 +1,4 @@
-{ stdenv, lib, licenses }:
+{ stdenv, lib }:
 
 stdenv.mkDerivation rec {
   pname = "nvm";
