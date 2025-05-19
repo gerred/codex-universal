@@ -8,13 +8,14 @@ jobs:
   flake-lock-check:
     name: Ensure flake.lock is up to date
     runs-on: ubuntu-latest
-    container:
-      image: nixos/nix:latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v10
 
       - name: Restore and save Nix store cache
         uses: nix-community/cache-nix-action@v6
