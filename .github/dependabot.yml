@@ -4,3 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    automerged_updates:
+      enable: true
+      merge_method: "squash"
