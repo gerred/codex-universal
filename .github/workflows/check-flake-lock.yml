@@ -1,6 +1,5 @@
 name: Check flake.lock
 
-# Run on every pull request against main branch
 on:
   pull_request:
     branches: [ "main" ]
@@ -23,10 +22,29 @@ jobs:
           primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', 'flake.lock') }}
           restore-prefixes-first-match: nix-${{ runner.os }}-
 
-      - name: Check flake.lock is unchanged
+      - name: Check flake.lock is up to date
+        id: check
         run: |
-          nix flake lock --check
-
-      - name: Fail if flake.lock drift detected
-        run: |
-          git diff --exit-code flake.lock
+          echo "Checking if flake.lock is up to date..."
+          
+          # Save current flake.lock
+          cp flake.lock flake.lock.orig
+          
+          # Update the lock file
+          nix flake lock
+          
+          # Check if it changed
+          if diff -q flake.lock flake.lock.orig > /dev/null; then
+            echo "✅ flake.lock is up to date"
+          else
+            echo "❌ flake.lock is out of date"
+            echo "::error::flake.lock is out of date. The automated update workflow will create a PR shortly."
+            echo "::notice::You can manually update by running: nix flake lock"
+            
+            # Show what would change
+            echo "::group::Changes needed in flake.lock"
+            diff -u flake.lock.orig flake.lock || true
+            echo "::endgroup::"
+            
+            exit 1
+          fi
